@@ -120,3 +120,32 @@ class Flags(pg.sprite.Sprite):
         
         #esto sirve para que se defina la silueta bien
         self.image.set_colorkey(st.BLACK)
+        
+def main():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect(('192.168.1.35', 5001))
+    print('connected')
+    game = Game()
+    auxside = s.recv(1204)
+    side=int(auxside)
+    print(f"I am playing player {side}")
+    #gameinfo=s.recv(1024).decode()
+    #gameinfo=json.loads(gameinfo)
+    #game.update(gameinfo)
+    display = Display(game)
+    while game.is_running():
+        events = display.analyze_events(side)
+        for ev in events:
+            s.send(ev)
+            if ev == 'quit':
+                game.stop()
+            s.send("next")
+            gameinfo = s.recv()
+            game.update(gameinfo)
+            display.refresh()
+            display.tick()
+            
+
+
+if __name__=="__main__":
+    main()

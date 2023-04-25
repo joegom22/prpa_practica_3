@@ -8,7 +8,8 @@ Created on Wed Apr 19 10:34:51 2023
 import pygame as pg #importamos el módulo pygame
 import settings as st #importamos el archivo con todos los parámetros
 import sprites as sp #importamos el archivo con todos los sprites (elementos que hay en el juego)
-
+import socket
+import json
 
 #Definimos la clase para el Juego
 class Game:
@@ -147,8 +148,42 @@ class Game:
         self.all_sprites.draw(self.screen)
         pg.display.flip()
         
-#Ejecuta el juego
+#Acepta 2 jugadores y ejecuta el juego
 def main():
+    n=0
+    manager = Manager()
+    host = '0.0.0.0'
+    port = 5001
+    mysocket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    mysocket.bind((host,port))
+    while n<2:
+	    mysocket.listen(10)
+	    print('Listening')
+	    conn, addr = mysocket.accept()
+	    print('accepted')
+	    n += 1
+	    if n ==1:
+		    n_player = 0
+		    players = [None, None]
+		    game = Game(manager)
+		    gameinfo=game.get_info()
+		    conn.send(str(n_player).encode())
+		    conn.send(json.dumps(gameinfo).encode())
+		    players[n_player] = Process(target=player, args=(n_player, conn, game))
+	    else:
+	        n_player = 1
+	        game = Game(manager)
+	        conn.send(str(n_player).encode())
+	        gameinfo=game.get_info()
+	        conn.send(json.dumps(gameinfo).encode())
+	        players[n_player] = Process(target=player, args=(n_player, conn, game))
+            
+	players[0].start()
+	players[1].start()
+	n_player = 0
+	players = [None, None]
+	game = Game(manager)
+	        
     g = Game()
     try:
         while g.running:

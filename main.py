@@ -166,16 +166,16 @@ def main():
 		    n_player = 0
 		    players = [None, None]
 		    game = Game(manager)
-		    gameinfo=game.get_info()
+		    #gameinfo=game.get_info()
 		    conn.send(str(n_player).encode())
-		    conn.send(json.dumps(gameinfo).encode())
+		    #conn.send(json.dumps(gameinfo).encode())
 		    players[n_player] = Process(target=player, args=(n_player, conn, game))
 	    else:
 	        n_player = 1
 	        game = Game(manager)
 	        conn.send(str(n_player).encode())
-	        gameinfo=game.get_info()
-	        conn.send(json.dumps(gameinfo).encode())
+	        #gameinfo=game.get_info()
+	        #conn.send(json.dumps(gameinfo).encode())
 	        players[n_player] = Process(target=player, args=(n_player, conn, game))
             
 	players[0].start()

@@ -1,10 +1,11 @@
-from multiprocessing import Manager, Process, Value, Lock
+from multiprocessing.connection import Listener, Client
+from multiprocessing import Process, Manager, Value, Lock
 import pygame as pg #importamos el módulo pygame
 import settings as st #importamos el archivo con todos los parámetros
 import socket
 import random
 import traceback, sys, os, json
-
+DELTA = 30
 class Player():
     def __init__(self, n_player):
         self.n_player = n_player
@@ -25,21 +26,24 @@ class Player():
 
     def get_pos(self):
         return self.pos
-        
+    
+    def set_pos(self, pos):
+        self.pos = pos    
+    
     def get_number(self):
         return self.n_player
         
-    def moveDown():
-        pass
+    def moveDown(self):
+        self.pos[1] += DELTA
     
-    def moveUp():
-        pass
+    def moveUp(self):
+        self.pos[1] -= DELTA
     
-    def moveLeft():
-        pass
+    def moveLeft(self):
+        self.pos[0] -= DELTA
     
-    def moveRight():
-        pass
+    def moveRight(self):
+        self.pos[0] += DELTA
     
     def __str__(self):
         return f"P<{self.n_player}, {self.pos}>"
@@ -88,7 +92,10 @@ class Game():
     
     def get_player(self, n_player):
         return self.players[n_player]
-    
+        
+    def get_wall(self, n):
+    	return self.walls[n]
+    	
     def get_flag(self):
         return self.flagsvisible[0]
     
@@ -125,53 +132,44 @@ class Game():
     def add_flag(self,manager):
         flag = random.choice(self.flags)
         self.flagsvisible.append(flag)
-        #self.all_sprites.add()
         
             
-    def win_flag(self, n_player):
-        self.lock.acquire()
-        collision = pg.sprite.spritecollide(self.players[n_player], self.flagsvisible, False)
-        if collision:
-            collision[0].kill()
-            self.add_flag()
-            self.players[n_player].score += 1
-            self.score[n_player] += 1
-            self.players[0].pos = [st.inicio1[0],st.inicio1[1]]
-            self.players[1].pos = [st.inicio2[0],st.inicio2[1]]
+    def win_flag(self, manager, n_player):
+        self.add_flag(manager)
+        self.players[n_player].score += 1
+        self.score[n_player] += 1
+        self.players[0].pos = [st.inicio1[0],st.inicio1[1]]
+        self.players[1].pos = [st.inicio2[0],st.inicio2[1]]
         if self.players[n_player].score == 3:
             self.running.Value = 0
-        self.lock.release()
         
-    def collide_wall(self, n_player):
-        collision = pg.sprite.spritecollide(self.players[n_player], self.walls, False)
-        if collision:
-            if n_player == 0:
-                self.players[n_player].pos = [st.inicio1[0],st.inicio1[1]]
-            else:
-                self.players[n_player].pos = [st.inicio2[0],st.inicio2[1]]      
-        
+    def collide_wall(self, manager, n_player):
+        if n_player == 0:
+            self.players[n_player].set_pos([st.inicio1[0],st.inicio1[1]])
+            print(self.players[n_player].get_pos())
+        else:
+            self.players[n_player].set_pos([st.inicio2[0],st.inicio2[1]])
+            print(self.players[n_player].get_pos())
             
     def get_info(self):
-        info = {
-            "pos_player_0": self.players[0].get_pos(),
-            "pos_player_1": self.players[1].get_pos(),
-            "pos_flag": self.flagsvisible[0].get_pos(),
-            "score": list(self.score),
-            "is_running": self.running.value == 1}
+        lista = []
+        for i in self.walls:
+            lista.append((i.get_pos(),i.get_measures()))
+        info = {"pos_player_0": self.players[0].get_pos(),"pos_player_1": self.players[1].get_pos(),"pos_flag": self.flagsvisible[0].get_pos(),"walls": lista,"score": list(self.score),"is_running": self.running.value == 1}
         return info
     
-    def __str__(self):
+def __str__(self):
         return f"G<{self.players[0]}:{self.players[1]}:{self.running.value}>"
     
-def player(n_player, conn, game):
+def player(n_player, manager, conn, game):
     try:
         print(f"starting player {n_player}")
         gameinfo = game.get_info()
-        conn.send(json.dumps(gameinfo).encode())
+        conn.send(gameinfo)
         while game.is_running():
             command = ""
             while command != "next":
-                command = conn.recv(1024)
+                command = conn.recv()
                 if command == "up":
                     game.moveUp(n_player)
                 elif command == "down":
@@ -181,11 +179,13 @@ def player(n_player, conn, game):
                 elif command == "right":
                     game.moveRight(n_player)
                 elif command == "flag":
-                    game.win_flag(n_player)
+                    game.win_flag(manager, n_player)
+                elif command == "wall":
+                    game.collide_wall(manager, n_player)
                 elif command == "quit":
                     game.stop()
             gameinfo = game.get_info()
-            conn.send(json.dumps(gameinfo).encode())
+            conn.send(gameinfo)
     except:
         traceback.print_exc()
         conn.close()
@@ -193,37 +193,35 @@ def player(n_player, conn, game):
         print(f"Game ended {game}")   
 
 def main():
-    n=0
     manager = Manager()
     host = '0.0.0.0'
     port = 5000
-    mysocket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    mysocket.bind((host,port))
-    while n<2:
-	    mysocket.listen(10)
-	    print('Listening')
-	    game = Game(manager)
-	    conn, addr= mysocket.accept()
-	    print('accepted')
-	    n += 1
-	    if n ==1:
-		    n_player = 0
-		    players = [None, None]
-		    #gameinfo=game.get_info()
-		    conn.send(str(n_player).encode())
-		    #conn.send(json.dumps(gameinfo).encode())
-		    players[n_player] = Process(target=player, args=(n_player, conn, game))
-	    else:
-	        n_player = 1
-	        conn.send(str(n_player).encode())
-	        #gameinfo=game.get_info()
-	        #conn.send(json.dumps(gameinfo).encode())
-	        players[n_player] = Process(target=player, args=(n_player, conn, game))
-	        players[0].start()
-	        players[1].start()
-	        n_player = 0
-	        players = [None, None]
-	        game = Game(manager)
-	        
+    try:
+        with Listener((host, port),
+                      authkey=b'secret password') as listener:
+            n_player = 0
+            players = [None, None]
+            game = Game(manager)
+            while True:
+                print(f"accepting connection {n_player}")
+                conn = listener.accept()
+                gameinfo = game.get_info()
+                conn.send(n_player)
+                conn.send(gameinfo)
+                players[n_player] = Process(target=player,
+                                            args=(n_player, manager, conn, game))
+                n_player += 1
+                if n_player == 2:
+                    gameinfo = game.get_info()
+                    conn.send(gameinfo)
+                    players[0].start()
+                    players[1].start()
+                    n_player = 0
+                    players = [None, None]
+                    game = Game(manager)
+
+    except Exception as e:
+        traceback.print_exc()
+
 if __name__=='__main__':
     main()     

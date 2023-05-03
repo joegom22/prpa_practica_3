@@ -213,6 +213,7 @@ class Display():
         return events  
 
     def refresh(self):
+        """
     	self.all_sprites.empty()
     	self.wall_sprites.empty()
     	self.players_group.empty()
@@ -255,7 +256,7 @@ class Display():
     	self.screen.blit(text, (st.SIZE[0]-250, 10))
     	self.all_sprites.draw(self.screen)
     	pg.display.flip()
-        """
+        
 
     def tick(self):
         self.clock.tick(st.FPS)

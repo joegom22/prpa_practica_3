@@ -29,7 +29,7 @@ paredes = [[90,329,278,137],[368,445,161,21],
            [2,538,130,140],[603,329,90,138],
            [230,538,416,67]]
 #posiciones de las banderas 
-banderas = [[200,560],[580,350],[750,100]]
+banderas = [[200,560],[580,350],[750,100], [750,350], [700, 560]]
 
 
 
@@ -39,3 +39,5 @@ path = os.path.join(game_folder,'camino2.png')
 persona1 = os.path.join(game_folder,'p1_front.png')
 persona2 = os.path.join(game_folder,'p2_front.png')
 bandera_roja = os.path.join(game_folder,'flagRed.png')
+fin_p0=os.path.join(game_folder, 'Fin_partida_player0.png')
+fin_p1=os.path.join(game_folder, 'Fin_partida_player1.png')

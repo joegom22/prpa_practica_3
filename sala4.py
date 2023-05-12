@@ -15,6 +15,14 @@ import traceback, sys, os, json
 DELTA = 30
 class Player():
     def __init__(self, n_player):
+        """
+        Función de la clase Player que inicializa al jugador dándole como número de jugador un valor dado.
+        Le coloca en su posición inicial y pone su velocidad, puntuación y aceleración a cero
+        
+        args
+            self
+            n_player: int --> número de jugador
+        """        
         self.n_player = n_player
         if self.n_player == 0:
             self.pos = [st.inicio1[0],st.inicio1[1]]
@@ -32,37 +40,95 @@ class Player():
             self.score = 0
 
     def get_pos(self):
+        """
+        Función de la clase Player que devuelve la posición del jugador
+        
+        args
+            self
+        """
         return self.pos
     
     def set_pos(self, pos):
+        """
+        Función de la clase Player que cambia la posición del jugador por una dada
+        
+        args
+            self
+            pos: (int, int) --> nueva posición
+        """    
         self.pos = pos    
     
     def get_number(self):
+        """
+        Función de la clase Player que devuelve el número del jugador
+        
+        args
+            self
+        """       
         return self.n_player
         
     def moveDown(self):
+        """
+        Función de la clase Player que desplaza al jugador hacia abajo una cantidad delta.
+        Además se asegura de que si el jugador se sale de la pantalla vuelve al inicio.
+        
+        args
+            self
+        """
         self.pos[1] += DELTA
         if self.pos[1]>650:
         	self.pos = [st.inicio1[0],st.inicio1[1]]
     
     def moveUp(self):
+        """
+        Función de la clase Player que desplaza al jugador hacia arriba una cantidad delta.
+        Además se asegura de que si el jugador se sale de la pantalla vuelve al inicio.
+        
+        args
+            self
+        """        
         self.pos[1] -= DELTA
         if self.pos[1]<0:
         	self.pos = [st.inicio1[0],st.inicio1[1]]
     
     def moveLeft(self):
+        """
+        Función de la clase Player que desplaza al jugador hacia la izquierda una cantidad delta.
+        
+        args
+            self
+        """  
         self.pos[0] -= DELTA
     
     def moveRight(self):
+        """
+        Función de la clase Player que desplaza al jugador hacia la derecha una cantidad delta.
+        
+        args
+            self
+        """  
         self.pos[0] += DELTA
     
     def inicio(self,n_player):
+        """
+        Función de la clase Player que coloca al jugador en su posición inicial.
+        
+        args
+            self
+            n_player: int --> número de jugador
+        """          
         if n_player == 0:
             self.pos = st.inicio1
         else:
             self.pos = st.inicio2
     
     def __str__(self):
+        """
+        Función que sirve para visualizar el estado del jugador por pantalla
+        
+        args
+            self
+        """
         return f"P<{self.n_player}, {self.pos}>"
         
 class Flag():

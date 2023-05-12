@@ -441,6 +441,16 @@ def __str__(self):
         return f"G<{self.players[0]}:{self.players[1]}:{self.running.value}>"
     
 def player(n_player, manager, conn, game):
+    """
+    Función que actuará como proceso del jugador.
+    Comienza y recibe la información del juego, mientras la orden no sea parar continuará realizando acciones.
+    
+    args
+        n_player: int --> número del jugador
+        manager: manager
+        conn: connection
+        game: game
+    """
     try:
         print(f"starting player {n_player}")
         gameinfo = game.get_info()
@@ -473,6 +483,10 @@ def player(n_player, manager, conn, game):
         print(f"Game ended {game}")   
 
 def main():
+    """
+    Función principal sn argumentos. Inicializa la escucha en una ip y un puerto y acepta 2 conexiones, que convierte en procesos de la función player y les manda la información del juego.
+   
+    """
     manager = Manager()
     host = '0.0.0.0'
     port = 5000

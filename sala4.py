@@ -133,26 +133,74 @@ class Player():
         
 class Flag():
     def __init__(self, x, y):
+        """
+        Función de la clase Flag que inicializa una bandera en una posición dada
+        
+        args
+            self
+            x: int --> coordenada x de la posición
+            y: int --> coordenada y de la posición
+        """ 
         self.pos = [x,y]
     
     def get_pos(self):
+        """
+        Función de la clase Flag que devuelve la posición de la bandera
+        
+        args
+            self
+        """ 
         return self.pos
     
     def __str__(self):
+        """
+        Función que sirve para visualizar el estado de la bandera por pantalla
+        
+        args
+            self
+        """
         return f"F<{self.pos}>"
         
 class Wall():
     def __init__(self, x, y, w, h):
+        """
+        Función de la clase Wall que inicializa un muro en una posición dada y con una anchura y una altura dadas
+        
+        args
+            self
+            x: int --> coordenada x de la posición
+            y: int --> coordenada y de la posición
+            w: int --> anchura
+            h: int --> altura
+        """ 
         self.pos = [x,y]
         self.measures = [w, h]
     
     def get_pos(self):
+        """
+        Función de la clase Wall que devuelve la posición del muro
+        
+        args
+            self
+        """ 
         return self.pos
     
     def get_measures(self):
+        """
+        Función de la clase Wall que devuelve las medidas del muro
+        
+        args
+            self
+        """ 
         return self.measures
         
     def __str__(self):
+                """
+        Función que sirve para visualizar el estado del muro por pantalla
+        
+        args
+            self
+        """
         return f"W<{self.pos}>"
         
 

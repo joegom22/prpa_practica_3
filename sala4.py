@@ -206,6 +206,14 @@ class Wall():
 
 class Game():
     def __init__(self, manager):
+        """
+        Función de la clase Game que inicializa el juego. Crea una lista con las banderas, con la bandera visible, con los jugadores y con los muros.
+        Crea también la puntuación, el cronómetro, un lock para ayudarnos a evitar concurrencias no deseadas, un valor de si estamos jugando (0 es no, 1 es sí).
+        
+        args
+            self
+            manager: manager
+        """
         self.players = manager.list( [Player(0), Player(1)] )
         self.lista = []
         self.flags = manager.list()
@@ -222,24 +230,71 @@ class Game():
         self.lock = Lock()
             
     def get_player(self, n_player):
+        """
+        Función de la clase Game que dado un número de jugador devuelve el jugador con dicho número
+        
+        args
+            self
+            n_player: int --> número de jugador
+        """
         return self.players[n_player]
         
     def get_wall(self, n):
-    	return self.walls[n]
+    	"""
+        Función de la clase Game que dado un índice devuelve el muro en esa posición en la lista de muros
+        
+        args
+            self
+            n: int --> índice
+        """
+        return self.walls[n]
     	
     def get_flag(self):
+        """
+        Función de la clase Game que devuelve la bandera visible
+        
+        args
+            self
+        """
         return self.flags[0]
     
     def get_score(self):
+        """
+        Función de la clase Game que devuelve la puntuación
+        
+        args
+            self
+        """
         return list(self.score) 
 
     def is_running(self):
+        """
+        Función de la clase Game que devuelve cierto o falso en función de si el juego sigue o debe parar resp.
+        
+        args
+            self
+        """
         return self.running.value == 1
 
     def stop(self):
+        """
+        Función de la clase Game que cambia el valor de running para que el juego se detenga
+        
+        args
+            self
+        """
         self.running.value = 0 
         
     def moveUp(self, n_player):
+        """
+        Función de la clase Game que mueve al jugador hacia arriba llamando a la correspondiente función de la clase Player.
+        Luego actualiza ese jugador.
+        El lock impide la concurrencia
+        
+        args
+            self
+            n_player: int --> numero de jugador
+        """
         self.lock.acquire()
         p = self.players[n_player]
         p.moveUp()
@@ -247,6 +302,15 @@ class Game():
         self.lock.release()
         
     def moveDown(self, n_player):
+        """
+        Función de la clase Game que mueve al jugador hacia abajo llamando a la correspondiente función de la clase Player.
+        Luego actualiza ese jugador.
+        El lock impide la concurrencia
+        
+        args
+            self
+            n_player: int --> numero de jugador
+        """
         self.lock.acquire()
         p = self.players[n_player]
         p.moveDown()
@@ -254,6 +318,15 @@ class Game():
         self.lock.release()
                 
     def moveLeft(self, n_player):
+        """
+        Función de la clase Game que mueve al jugador hacia la izquierda llamando a la correspondiente función de la clase Player.
+        Luego actualiza ese jugador.
+        El lock impide la concurrencia
+        
+        args
+            self
+            n_player: int --> numero de jugador
+        """
         self.lock.acquire()   
         p = self.players[n_player]
         p.moveLeft()
@@ -261,6 +334,15 @@ class Game():
         self.lock.release()
                 
     def moveRight(self, n_player):
+        """
+        Función de la clase Game que mueve al jugador hacia la derecha llamando a la correspondiente función de la clase Player.
+        Luego actualiza ese jugador.
+        El lock impide la concurrencia
+        
+        args
+            self
+            n_player: int --> numero de jugador
+        """
         self.lock.acquire()
         p = self.players[n_player]
         p.moveRight()
@@ -268,6 +350,13 @@ class Game():
         self.lock.release()
    
     def remove_flag(self,manager,flag_pos):
+        """
+        Función de la clase Game que elimina la bandera que era visible
+        
+        args
+            self
+            manager: manager
+        """
         j = 0
         for i in self.flags:
             if i.get_pos() == flag_pos:
@@ -276,6 +365,16 @@ class Game():
             j += 1
             
     def win_flag(self, manager, n_player,flag_pos):
+        """
+        Función de la clase Game que elimina la bandera de la posición dada, suma 1 a la puntuación del jugador con número el dado y, tras actualizar los jugadores, 
+        comprueba si se ha llegado a la puntuación necesaria para ganar, si es así termina el juego.
+        El lock evita la concurrencia, ya que 2 jugadores no pueden ganar bandera a la vez
+        
+        args
+            self
+            manager: manager
+            n_player: int --> número del jugador
+        """
         self.lock.acquire()
         self.remove_flag(manager,flag_pos)
         p = self.players[n_player]
@@ -294,6 +393,14 @@ class Game():
         self.lock.release()
                 
     def collide_wall(self, manager, n_player):
+        """
+        Función de la clase Game que devuelve al jugador con número el dado a su posición inicial
+        
+        args
+            self
+            manager: manager
+            n_player: int --> número del jugador
+        """
         self.lock.acquire()
         if n_player == 0:
             p = self.players[n_player]
@@ -308,6 +415,13 @@ class Game():
         self.lock.release()  
          
     def get_info(self):
+        """
+        Función de la clase Game que nos devuelve en un diccionario la información relevante del juego.
+        Las posiciones de ambos jugadores, la posición de la bandera visible, la de los muros, la puntuación y si el juego debe seguir corriendo o debe parar.
+        
+        args
+            self
+        """
         lista = []
         for i in self.walls:
             lista.append((i.get_pos(),i.get_measures()))
@@ -318,6 +432,12 @@ class Game():
         return info
     
 def __str__(self):
+        """
+        Función de la clase Game que sirve para visualizar por pantalla el estado de ambos jugadores y si el juego debe seguir corriendo o no.
+        
+        args
+            self
+        """
         return f"G<{self.players[0]}:{self.players[1]}:{self.running.value}>"
     
 def player(n_player, manager, conn, game):

@@ -54,7 +54,7 @@ class Player():
         
         args
             self
-            pos: (int, int) --> nueva posición
+            pos: [int, int] --> nueva posición
         """    
         self.pos = pos    
     

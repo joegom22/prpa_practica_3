@@ -15,32 +15,89 @@ import time
 
 class Player():
     def __init__(self, n_player):
+        """
+        Función de la clase Player que inicializa un player con número de jugador dado y posición vacía.
+        
+        args
+            self
+            n_player: int --> número de jugador
+        """
         self.n_player = n_player
         self.pos = [None, None]
 
     def get_pos(self):
+        """
+        Función de la clase Player que devuelve la posición del jugador
+        
+        args
+            self
+        """
         return self.pos
 
     def get_n_player(self):
+        """
+        Función de la clase Player que devuelve el número de jugador
+        
+        args
+            self
+        """
         return self.n_player
 
     def set_pos(self, pos):
+        """
+        Función de la clase Player que cambia la posición del jugador por una dada
+        
+        args
+            self
+            pos: [int, int] --> nueva posición
+        """
         self.pos = pos
 
     def __str__(self):
+        """
+        Función de la clase Player que permite visualizar por pantalla el estado del jugador
+        
+        args
+            self
+        """
         return f"P<{self.n_player, self.pos}>"
     
 class Flag():
     def __init__(self):
+        """
+        Función de la clase Flag que inicializa una bandera con posición vacía
+        
+        args
+            self
+        """
         self.pos=[ None, None ]
 
     def get_pos(self):
+        """
+        Función de la clase Flag que devuelve la posición de la bandera
+        
+        args
+            self
+        """
         return self.pos
 
     def set_pos(self, pos):
+        """
+        Función de la clase Flag que cambia la posición de la bandera por una dada
+        
+        args
+            self
+            pos: [int, int] --> nueva posición
+        """
         self.pos = pos
 
     def __str__(self):
+        """
+        Función de la clase Flag que permite visualizar por pantalla el estado de la bandera
+        
+        args
+            self
+        """
         return f"F<{self.pos}>"
 
 class Wall():

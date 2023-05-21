@@ -1,16 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May  3 15:32:23 2023
-
-@author: USUARIO
-"""
-
-
 from multiprocessing.connection import Listener, Client
 from multiprocessing import Process, Manager, Value, Lock
 import pygame as pg #importamos el módulo pygame
 import settings as st #importamos el archivo con todos los parámetros
-import socket
 import random
 import traceback, sys, os, json
 DELTA = 30

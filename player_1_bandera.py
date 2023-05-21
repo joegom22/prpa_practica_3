@@ -1,7 +1,6 @@
 from multiprocessing.connection import Listener, Client
 from multiprocessing import Process, Manager, Value, Lock
 import traceback, sys, os, json
-import socket
 import settings as st
 import pygame as pg
 import time

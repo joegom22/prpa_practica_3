@@ -1,6 +1,12 @@
-# prpa_practica_3
+Programación Paralela: Práctica 3
 
-Participantes del grupo:
+"""
+Práctica de Programación Distribuida
+"""
+
+Idioma: Python
+
+Creadores:
 
     Joel Gómez Santos
     
@@ -8,13 +14,28 @@ Participantes del grupo:
     
     Celeste Rhodes Rodríguez
 
-En esta práctica hemos realizado unjuego interactivo en el que deben jugar a la vez dos personas. De este modo tenemos un programa que tiene información distribuida y que se comparte entre los clientes, en este caso, los jugadores.
+1. Motivación
 
+El objetivo es realizar un juego interactivo en el que juegan a la vez dos personas desde ordenadores diferentes. De este modo tenemos un programa que tiene información distribuida y que se comparte entre los clientes, en este caso, los jugadores.
 
-El objetivo del juego es conseguir 3 banderas antes que tu contrincante.
+2. Descripción
 
-Hemos incuido dos versiones del juego:
+Se trata de un juego para 2 personas en el que, moviendo tu personaje por el tablero sin caerte, debes conseguir 3 banderas antes que tu contrincante.
 
--En una aparece una bandera cada vez. Es decir, se inicia el juego y aparece una bandera; cuando uno de los dos jugadores la captura, ambos vuelven a la casilla de salida y aparece una nueva bandera en el tablero.
+El juego tiene dos variantes:
 
--En la otra aparecen todas las banderas desde el inicio del juego.
+-En Sala_1_bandera y player_1_bandera una aparece una bandera cada vez. Es decir, se inicia el juego y aparece una bandera; cuando uno de los dos jugadores la captura, ambos vuelven a la casilla de salida y aparece una nueva bandera en el tablero.
+
+-En sala4 y player4 aparecen todas las banderas desde el inicio del juego, desapareciendo una al ser capturada y manteniéndose las demás.
+
+Se evita el acceso simultáneo a funciones que no deben efectuarse a la vez con un mutex, como por ejemplo la función de obtención de una bandera.
+
+3. Modo de uso
+
+Un sistema actuará como sala, que será quien espere a que se conecten los jugadores e inicializa el juego. Los dos jugadores pueden estar en el mismo ordenador que la sala o en otro, no tienen por qué estar en el mismo entre sí tampoco.
+
+El usuario que desee ejecutar un programa de jugador debe descargarse los módulos multiprocessing, pygame, traceback, time, sys, os y json; los cuales se instalan fácilmente en el ordenador. Además, es necesario tener descargado el archivo settings que se incluye en este repositorio y donde se encuentran importantes datos del juego, así como las imágenes de los sprites del juego que se incluyen en la carpeta fotos.
+
+El usuario que desee ejecutar un programa de sala debe descargarse los módulos multiprocessing, pygame, random, time, traceback, sys, os y json; los cuales se instalan fácilmente en el ordenador. Además, es necesario tener descargado el archivo settings que se incluye en este repositorio y donde se encuentran importantes datos del juego.
+
+Una vez se cumplan todos estos requisitos basta ejecutar los programas asegurándose de que en el código del player están correctamente escritos la ip en la que se ejecuta la sala y el puerto correspondiente.

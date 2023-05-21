@@ -8,7 +8,6 @@ Created on Fri May  5 14:25:58 2023
 from multiprocessing.connection import Listener, Client
 from multiprocessing import Process, Manager, Value, Lock
 import traceback, sys, os, json
-import socket
 import settings as st
 import pygame as pg
 import time

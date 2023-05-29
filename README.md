@@ -38,4 +38,7 @@ El usuario que desee ejecutar un programa de jugador debe descargarse los módul
 
 El usuario que desee ejecutar un programa de sala debe descargarse los módulos multiprocessing, pygame, random, time, traceback, sys, os y json; los cuales se instalan fácilmente en el ordenador. Además, es necesario tener descargado el archivo settings que se incluye en este repositorio y donde se encuentran importantes datos del juego.
 
-Una vez se cumplan todos estos requisitos basta ejecutar los programas asegurándose de que en el código del player están correctamente escritos la ip en la que se ejecuta la sala y el puerto correspondiente.
+    Jugar:
+    El archivo de la sala y el del jugador admiten una dirección ip como parámetro, deben proporcionar la adecuada si desean jugar.
+    
+    Para jugar es necesario que en un ordenador esté el programa de la sala ejecutándose, basta con ejecutar el programa con las condiciones que hemos descrito anteriormente y la sala se ejecuta. Además, cada usuario que desee jugar como personaje debe ejecutar el programa de jugador asegurándose de cumplir las condiciones arriba mencionadas. Una vez comience el juego el usuario manejará a su personaje con las flechas de su teclado.
